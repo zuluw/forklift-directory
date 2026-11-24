@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Справочник погрузчиков</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-brand"></div>
+        <div class="topbar-actions">
+            <span class="topbar-user-info">
+                Пользователь: <strong id="currentUserBadge">Иванов И.И.</strong>
+            </span>
+            <button type="button" id="btnOpenProfile" class="btn-profile">
+                Профиль
+            </button>
+        </div>
+    </header>
+
+    <div class="app-shell">
+        <aside class="sidebar" aria-label="Боковая навигация">
+            <nav class="sidebar-nav">
+                <button type="button" class="nav-item" data-section="users">Пользователи</button>
+                <button type="button" class="nav-item" data-section="notifications">Уведомления и напоминания</button>
+                <button type="button" class="nav-item" data-section="settings">Настройки</button>
+                <button type="button" class="nav-item active" data-section="forklifts">Справочник погрузчиков</button>
+                <button type="button" class="nav-item" data-section="backup">Резервное копирование и восстановление</button>
+                <button type="button" class="nav-item" data-section="directories">Справочники</button>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <section id="mainWorkspace" class="workspace-grid">
+                <section class="panel panel-forklifts" aria-labelledby="forkliftsHeading">
+                    <div class="panel-header">
+                        <h1 id="forkliftsHeading" class="panel-title">Справочник погрузчиков</h1>
+                    </div>
+
+                    <form id="searchForm" class="search-bar" novalidate>
+                        <label for="searchNumberInput" class="search-label">Номер погрузчика</label>
+                        <input type="text"
+                               id="searchNumberInput"
+                               class="text-input search-input"
+                               placeholder="Введите номер..."
+                               autocomplete="off" />
+                        <button type="submit" id="btnSearch" class="btn btn-primary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <circle cx="11" cy="11" r="7"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            Искать
+                        </button>
+                        <button type="button" id="btnResetFilter" class="btn btn-ghost">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            Сбросить фильтр
+                        </button>
+                    </form>
+
+                    <div class="toolbar-row">
+                        <button type="button" id="btnAddForklift" class="btn btn-primary">
+                            Добавить
+                        </button>
+                        <span id="forkliftsStatusInfo" class="status-counter"></span>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table" id="forkliftsTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-id">Код<br />записи</th>
+                                    <th class="col-brand">Марка</th>
+                                    <th class="col-number">Номер</th>
+                                    <th class="col-capacity">Грузоподъем-<br />ность</th>
+                                    <th class="col-active">Активен</th>
+                                    <th class="col-updated-at">Время и Дата<br />изменения</th>
+                                    <th class="col-updated-by">Пользователь</th>
+                                    <th class="col-actions-forklift">Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="forkliftsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="panel panel-downtimes" aria-labelledby="downtimesHeading">
+                    <div class="panel-header panel-header-downtimes">
+                        <h2 id="downtimesHeading" class="panel-title-secondary">
+                            Простои по погрузчику
+                            <span id="selectedForkliftNumber" class="selected-forklift-badge">не выбран</span>
+                        </h2>
+                    </div>
+
+                    <div class="toolbar-row">
+                        <button type="button" id="btnAddDowntime" class="btn btn-primary" disabled>
+                            Добавить
+                        </button>
+                        <span id="downtimesStatusInfo" class="status-counter"></span>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table" id="downtimesTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-id">Код<br />записи</th>
+                                    <th class="col-dt">Начало</th>
+                                    <th class="col-dt">Окончание</th>
+                                    <th class="col-duration">Время<br />простоя</th>
+                                    <th class="col-reason">Причина</th>
+                                    <th class="col-actions-downtime">Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="downtimesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <section id="stubWorkspace" class="stub-panel" hidden>
+                <div class="stub-card">
+                    <h2 id="stubTitle" class="stub-title">Раздел в разработке</h2>
+                    <p class="stub-text">
+                        Данный раздел находится в разработке и будет доступен в следующих версиях системы.
+                    </p>
+                    <button type="button" id="btnBackToForklifts" class="btn btn-primary">
+                        Вернуться в «Справочник погрузчиков»
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="downtimeModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="downtimeModalTitle" hidden>
+        <div class="modal-window modal-incident">
+            <div class="modal-header-bar">
+                <h3 id="downtimeModalTitle" class="modal-title-centered">Проблемы с погрузчиком? Опишите</h3>
+            </div>
+            <form id="downtimeForm" class="modal-body" novalidate>
+                <div class="incident-dates-row">
+                    <div class="incident-date-group">
+                        <label for="downtimeStartInput" class="incident-label">
+                            Начало <span class="required-mark">*</span>
+                        </label>
+                        <input type="datetime-local"
+                               id="downtimeStartInput"
+                               class="pill-input"
+                               required />
+                    </div>
+                    <div class="incident-date-group">
+                        <label for="downtimeEndInput" class="incident-label">Окончание</label>
+                        <div class="end-input-wrap">
+                            <input type="datetime-local"
+                                   id="downtimeEndInput"
+                                   class="pill-input" />
+                            <button type="button" id="btnClearDowntimeEnd" class="btn-clear-date" title="Очистить дату окончания (сделать действующим)">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="incident-desc-group">
+                    <label for="downtimeDescriptionInput" class="incident-label">
+                        Описание инцидента <span class="required-mark">*</span>
+                    </label>
+                    <textarea id="downtimeDescriptionInput"
+                              class="incident-textarea"
+                              rows="6"
+                              maxlength="2000"
+                              placeholder="Опишите причину неисправности или простоя..."
+                              required></textarea>
+                </div>
+
+                <div id="downtimeModalError" class="modal-error-banner" hidden></div>
+
+                <div class="modal-footer-centered">
+                    <button type="submit" id="btnSaveDowntime" class="btn btn-primary btn-modal-wide">
+                        Сохранить
+                    </button>
+                    <button type="button" id="btnCloseDowntimeModal" class="btn btn-secondary btn-modal-wide">
+                        Выход
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle" hidden>
+        <div class="modal-window modal-small">
+            <div class="modal-header-bar">
+                <h3 id="profileModalTitle" class="modal-title-centered">Профиль текущего пользователя</h3>
+            </div>
+            <form id="profileForm" class="modal-body" novalidate>
+                <div class="form-field">
+                    <label for="profileNameInput" class="field-label">
+                        ФИО пользователя <span class="required-mark">*</span>
+                    </label>
+                    <input type="text"
+                           id="profileNameInput"
+                           class="text-input full-width"
+                           maxlength="150"
+                           placeholder="Например: Иванов И.И."
+                           required />
+                    <p class="field-hint">
+                        Это ФИО сохраняется в браузере и автоматически записывается в колонку «Пользователь» при создании или изменении погрузчика.
+                    </p>
+                </div>
+
+                <div id="profileModalError" class="modal-error-banner" hidden></div>
+
+                <div class="modal-footer-centered">
+                    <button type="submit" id="btnSaveProfile" class="btn btn-primary btn-modal-wide">
+                        Сохранить
+                    </button>
+                    <button type="button" id="btnCloseProfileModal" class="btn btn-secondary btn-modal-wide">
+                        Закрыть
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle" hidden>
+        <div class="modal-window modal-confirm">
+            <div class="modal-header-bar">
+                <h3 id="confirmModalTitle" class="modal-title-centered">Подтверждение</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage" class="confirm-text"></p>
+                <div class="modal-footer-centered">
+                    <button type="button" id="btnConfirmYes" class="btn btn-primary btn-modal-wide">
+                        Да
+                    </button>
+                    <button type="button" id="btnConfirmNo" class="btn btn-secondary btn-modal-wide">
+                        Нет
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
